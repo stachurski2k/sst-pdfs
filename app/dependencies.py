@@ -17,6 +17,8 @@ def get_logger()-> logging.Logger:
     )
 
     logger = logging.getLogger("global_logger")
-    logger.setLevel(logging.DEBUG)
     
+    log_level=getattr(logging, settings.LOG_LEVEL.upper())
+    logger.setLevel(log_level)
+
     return logger
