@@ -3,6 +3,8 @@ from domain.value_objects.charts import *
 from rest.exceptions import *
 
 class ChartMapper():
+    def __init__(self,log):
+        self.log=log
     def map_to_model(self,request: ChartRequest):
         if isinstance(request,LineChartRequest):
             config = ChartConfig(
@@ -17,5 +19,15 @@ class ChartMapper():
                 for key, value in request.series.items()
             }
             return LineChart(config=config, series=series)
+        if isinstance(request,HistogramRequest):
+            config = ChartConfig(
+                title=request.config.title,
+                xAxis=request.config.xAxis,
+                yAxis=request.config.yAxis,
+                width=request.config.width,
+                height=request.config.height,
+            )
+            data=request.data
+            return HistogramChart(config=config, data=data)
         
         raise ChartMappingError()

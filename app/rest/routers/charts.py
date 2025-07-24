@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 from fastapi import FastAPI, Body, Query, HTTPException, UploadFile, File, Form,Depends
 from fastapi.responses import FileResponse
@@ -11,10 +11,15 @@ from dependencies import get_chart_strategy_factory, get_rest_chart_mapper, get_
 router = APIRouter()
 
 @router.post("/generate-chart-file")
-def generate_chart_file(chart: ChartRequest,chart_strategy_factory = Depends(get_chart_strategy_factory),
-    mapper = Depends(get_rest_chart_mapper), temp:TempService = Depends(get_temp_service)):
+def generate_chart_file(
+    chart: ChartRequest,
+    tasks:BackgroundTasks,
+    chart_strategy_factory = Depends(get_chart_strategy_factory),
+    mapper = Depends(get_rest_chart_mapper), 
+    temp = Depends(get_temp_service),
+    ):
 
-    tmpath = temp.get_random_temp_filepath()
+    tmpath = temp.get_random_temp_filepath(extension="png")
     try:
         model = mapper.map_to_model(chart)
         chart_strategy_factory.generate_to_file(model,tmpath)
@@ -25,6 +30,7 @@ def generate_chart_file(chart: ChartRequest,chart_strategy_factory = Depends(get
         raise
 
     finally:
-        temp.remove_temp_file(tmpath)
+
+        tasks.add_task(temp.remove_temp_file,tmpath)
 
 

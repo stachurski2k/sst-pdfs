@@ -3,8 +3,8 @@ from config import settings
 import os
 from datetime import datetime
 from functools import lru_cache
-from services.chart_strategy_factory import ChartStrategyFactory
-from services.temp_service import TempService
+from application.services.chart_strategy_factory import ChartStrategyFactory
+from application.services.temp_service import TempService
 from rest.mappers.chart_mapper import *
 
 @lru_cache()

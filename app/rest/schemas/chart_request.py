@@ -27,7 +27,13 @@ class LineChartRequest(BaseModel):
             raise ChartParsingError()
         return values
 
+class HistogramRequest(BaseModel):
+    chartType:Literal["hist"]
+    data: List[float]
+    config: ChartConfigRequest
+
+
 ChartRequest = Annotated[
-    Union[LineChartRequest],
+    Union[LineChartRequest,HistogramRequest],
     Field(discriminator="chartType")
 ]
