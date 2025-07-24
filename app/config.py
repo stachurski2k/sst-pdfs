@@ -8,5 +8,7 @@ class Settings(BaseSettings):
     LOGS_DIR:str ="logs"
     LOG_LEVEL:str ="DEBUG"
     TEMP_DIR:str = "tmp"
+    THEMES_DIR:str = "static/css"
+    TEMPLATES_DIR:str = "static/templates"
 
 settings = Settings()

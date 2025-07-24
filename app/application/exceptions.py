@@ -10,3 +10,9 @@ class ThemeUploadException(Exception):
 
 class ThemeNotFoundException(Exception):
     pass
+
+class TemplateSaveError(Exception):
+    pass
+
+class TemplateNotFoundError(Exception):
+    pass

@@ -28,7 +28,7 @@ def generate_chart_file(
 
         return FileResponse(tmpath, media_type="image/png", filename="chart.png")
 
-    except ChartParsinException as e:
+    except ChartParsingError as e:
         raise HTTPException(status_code=400,detail=e)
 
     except IncorrectChartType as e:
