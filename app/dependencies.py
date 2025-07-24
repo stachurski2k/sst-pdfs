@@ -7,6 +7,7 @@ from application.services.chart_strategy_factory import ChartStrategyFactory
 from application.services.temp_service import TempService
 from application.services.themes_service import ThemesService
 from application.services.templates_service import TemplatesService
+from application.services.pdf_service import PDFService
 from rest.mappers.chart_mapper import *
 
 @lru_cache()
@@ -48,3 +49,7 @@ def get_themes_service():
 @lru_cache
 def get_templates_service():
     return TemplatesService(get_logger(),settings.TEMPLATES_DIR)
+
+@lru_cache
+def get_pdf_service():
+    return PDFService(get_logger(),get_temp_service(),settings.TEMPLATES_DIR,settings.THEMES_DIR,os.getcwd())

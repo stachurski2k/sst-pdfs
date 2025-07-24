@@ -1,5 +1,7 @@
 from rest.schemas.chart_request import *
+from rest.schemas.pdf_request import *
 from domain.value_objects.charts import *
+from domain.value_objects.pdfs import *
 from rest.exceptions import *
 
 class ChartMapper():
@@ -19,6 +21,7 @@ class ChartMapper():
                 for key, value in request.series.items()
             }
             return LineChart(config=config, series=series)
+
         if isinstance(request,HistogramRequest):
             config = ChartConfig(
                 title=request.config.title,
@@ -31,3 +34,11 @@ class ChartMapper():
             return HistogramChart(config=config, data=data)
         
         raise ChartMappingError()
+    
+    def map_to_pdfdata(self,req: PDFRequest):
+
+        return PDFData(
+            template_name=req.template_name,
+            theme_name=req.theme_name,
+            params=req.params
+        )
