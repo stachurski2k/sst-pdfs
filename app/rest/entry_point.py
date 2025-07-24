@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from core.config import settings
+from config import settings
 from .routers.register_routers import register_routes
 from dependencies import get_logger
 

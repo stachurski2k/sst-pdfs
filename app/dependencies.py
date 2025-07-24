@@ -1,5 +1,5 @@
 import logging 
-from core.config import settings
+from config import settings
 import os
 from datetime import datetime
 from functools import lru_cache
