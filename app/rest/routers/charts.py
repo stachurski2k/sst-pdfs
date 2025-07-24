@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, BackgroundTasks
+from fastapi import APIRouter, Query, BackgroundTasks, HTTPException
 from fastapi.responses import FileResponse
 from fastapi import FastAPI, Body, Query, HTTPException, UploadFile, File, Form,Depends
 from fastapi.responses import FileResponse
@@ -6,6 +6,8 @@ from typing import Dict, Any, Optional,List
 from rest.schemas.chart_request import *
 import uuid,shutil,sys,os
 from dependencies import get_chart_strategy_factory, get_rest_chart_mapper, get_temp_service
+from application.exceptions import *
+from ..exceptions import *
 
 
 router = APIRouter()
@@ -26,8 +28,17 @@ def generate_chart_file(
 
         return FileResponse(tmpath, media_type="image/png", filename="chart.png")
 
+    except ChartParsinException as e:
+        raise HTTPException(status_code=400,detail=e)
+
+    except IncorrectChartType as e:
+        raise HTTPException(status_code=400,detail=e)
+
+    except ChartStrategyNotFound as e:
+        raise HTTPException(status_code=400,detail=e)
+
     except Exception as e:
-        raise
+        raise HTTPException(status_code=500,detail=e)
 
     finally:
 

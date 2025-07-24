@@ -4,3 +4,9 @@ class ChartStrategyNotFound(Exception):
 
 class IncorrectChartType(Exception):
     pass
+
+class ThemeUploadException(Exception):
+    pass
+
+class ThemeNotFoundException(Exception):
+    pass

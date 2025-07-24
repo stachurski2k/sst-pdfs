@@ -5,6 +5,7 @@ from datetime import datetime
 from functools import lru_cache
 from application.services.chart_strategy_factory import ChartStrategyFactory
 from application.services.temp_service import TempService
+from application.services.themes_service import ThemesService
 from rest.mappers.chart_mapper import *
 
 @lru_cache()
@@ -38,3 +39,7 @@ def get_rest_chart_mapper():
 @lru_cache
 def get_temp_service():
     return TempService(get_logger(),settings.TEMP_DIR)
+
+@lru_cache
+def get_themes_service():
+    return ThemesService(get_logger(),settings.THEMES_DIR)
