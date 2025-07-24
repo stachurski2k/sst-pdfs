@@ -1,9 +1,7 @@
-
-#import routers
+from .charts import router as chart_router
 
 def register_routes(app):
-    #register routes
-    pass
+    app.include_router(chart_router,prefix="/api")
 
 
 

@@ -1,0 +1,3 @@
+
+class ChartStrategyNotFound(Exception):
+    pass

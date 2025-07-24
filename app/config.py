@@ -7,5 +7,6 @@ class Settings(BaseSettings):
     PORT:int = 23000
     LOGS_DIR:str ="logs"
     LOG_LEVEL:str ="DEBUG"
+    TEMP_DIR:str = "tmp"
 
 settings = Settings()
