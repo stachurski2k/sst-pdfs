@@ -5,14 +5,20 @@ class ChartStrategyNotFound(Exception):
 class IncorrectChartType(Exception):
     pass
 
-class ThemeUploadException(Exception):
+class ThemeUploadError(Exception):
     pass
 
-class ThemeNotFoundException(Exception):
+class ThemeNotFoundError(Exception):
     pass
 
 class TemplateSaveError(Exception):
     pass
 
 class TemplateNotFoundError(Exception):
+    pass
+
+class ImageSaveError(Exception):
+    pass
+
+class ImageNotFoundError(Exception):
     pass

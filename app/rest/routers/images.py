@@ -5,11 +5,12 @@ from fastapi.responses import FileResponse
 from typing import Dict, Any, Optional,List
 import uuid,shutil,sys,os
 from dependencies import *
+import magic
 
 router = APIRouter()
 
 @router.post("/upload/", status_code=201)                                                          
-async def upload_template(file: UploadFile = File(...),templates=Depends(get_templates_repo)):
+async def upload_image(file: UploadFile = File(...),imgs=Depends(get_images_repo)):
     """                                                                                                   
     Uploads a new Jinja2 HTML template file.                                                              
                                                                                                         
@@ -25,14 +26,14 @@ async def upload_template(file: UploadFile = File(...),templates=Depends(get_tem
             - 500 Internal Server Error: For any file writing errors.                                     
     """                                                                                                   
     try:                                                                                                  
-        templates.save(file.filename,file.file)
+        imgs.save(file.filename,file.file)
     except Exception as e:                                                                                
         raise HTTPException(status_code=500, detail=f"Could not save template file: {e}")                 
                                                                                                         
     return {"message": f"Template '{file.filename}' uploaded successfully."}                              
                                                                                                         
 @router.get("/", response_model=List[str])                                                         
-async def list_templates(templates=Depends(get_templates_repo)) -> List[str]:                                                                  
+async def list_images(imgs=Depends(get_images_repo)) -> List[str]:                                                                  
     """                                                                                                   
     Lists all available Jinja2 HTML template files.                                                       
                                                                                                         
@@ -40,12 +41,12 @@ async def list_templates(templates=Depends(get_templates_repo)) -> List[str]:
         List[str]: A list of template filenames.                                                          
     """                                                                                                   
     try:                                                                                                  
-        return templates.list_all()
+        return imgs.list_all()
     except Exception as e:                                                                                
         raise HTTPException(status_code=500, detail=f"Could not list templates: {e}")  
 
 @router.get("/byname", response_model=str)                                                         
-async def get_template(template_name:str,templates=Depends(get_templates_repo)) -> str:
+async def get_image(imgname:str,imgs=Depends(get_images_repo)) -> str:
     """                                                                                                   
     Lists all available Jinja2 HTML template files.                                                       
                                                                                                         
@@ -53,12 +54,16 @@ async def get_template(template_name:str,templates=Depends(get_templates_repo)) 
         List[str]: A list of template filenames.                                                          
     """                                                                                                   
     try:                                                                                                  
-        return templates.get_content(template_name)
+
+        image_path = imgs.get_full_path(imgname)
+        mime_type = magic.from_file(image_path, mime=True)
+        return FileResponse(image_path, media_type=mime_type)
+
     except Exception as e:                                                                                
         raise HTTPException(status_code=500, detail=f"Could not list templates: {e}")  
 
 @router.delete("/")
-async def remove_template(template_name:str,templates=Depends(get_templates_repo)) -> str:
+async def remove_image(imgname:str,imgs=Depends(get_images_repo)) -> str:
     """                                                                                                   
     Lists all available Jinja2 HTML template files.                                                       
                                                                                                         
@@ -66,7 +71,7 @@ async def remove_template(template_name:str,templates=Depends(get_templates_repo
         List[str]: A list of template filenames.                                                          
     """                                                                                                   
     try:                                                                                                  
-        templates.remove(template_name)
+        imgs.remove(imgname)
         return Response(status_code=status.HTTP_200_OK)
     except Exception as e:                                                                                
-        raise HTTPException(status_code=500, detail=f"Could not remove templates: {e}")  
+        raise HTTPException(status_code=500, detail=f"Could not list templates: {e}")  

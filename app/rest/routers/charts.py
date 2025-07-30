@@ -26,7 +26,7 @@ def generate_chart_file(
         model = mapper.map_to_model(chart)
         chart_strategy_factory.generate_to_file(model,tmpath)
 
-        return FileResponse(tmpath, media_type="image/png", filename="chart.png")
+        return FileResponse(tmpath, media_type="image/png")
 
     except ChartParsingError as e:
         raise HTTPException(status_code=400,detail=e)

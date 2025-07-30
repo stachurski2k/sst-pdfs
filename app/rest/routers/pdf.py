@@ -4,7 +4,7 @@ from typing import Dict, Any, Optional,List
 from fastapi.responses import FileResponse
 import uuid,shutil,sys,os
 from fastapi import status
-from application.services.themes_service import *
+from application.exceptions import *
 from ..schemas.pdf_request import PDFRequest
 from dependencies import *
 
@@ -27,16 +27,22 @@ def generate_pdf_file(
         return FileResponse(tmpath, media_type="application/pdf", filename="pdf.pdf")
 
     except ChartParsingError as e:
-        raise HTTPException(status_code=400,detail=e)
+        raise HTTPException(status_code=400,detail=f"{e}")
 
     except IncorrectChartType as e:
-        raise HTTPException(status_code=400,detail=e)
+        raise HTTPException(status_code=400,detail=f"{e}")
 
     except ChartStrategyNotFound as e:
-        raise HTTPException(status_code=400,detail=e)
+        raise HTTPException(status_code=400,detail=f"{e}")
+    
+    except TemplateNotFoundError as e:
+        raise HTTPException(status_code=400,detail="Template was not found!")
+
+    except ThemeNotFoundError as e:
+        raise HTTPException(status_code=400,detail="Theme was not found!")
 
     except Exception as e:
-        raise HTTPException(status_code=500,detail=e)
+        raise HTTPException(status_code=500,detail=f"{e}")
 
     finally:
 

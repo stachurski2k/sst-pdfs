@@ -1,10 +1,11 @@
 from .chart_strategy_factory import *
 from domain.value_objects.charts import *
-from ..exceptions import *
+from ...exceptions import *
 from .line_chart_strategy import *
 from .histogram_strategy import *
 
 class ChartStrategyFactory():
+    
     def __init__(self,log):
         """
         Initializes the ChartStrategyFactory.

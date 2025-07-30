@@ -3,13 +3,13 @@ from fastapi import FastAPI, Body, Query, HTTPException, UploadFile, File, Form,
 from typing import Dict, Any, Optional,List
 import uuid,shutil,sys,os
 from fastapi import status
-from application.services.themes_service import *
+from application.exceptions import *
 from dependencies import *
 
 router = APIRouter()
 
 @router.post("/upload/", status_code=201)                                                             
-async def upload_theme(file: UploadFile = File(...),themes=Depends(get_themes_service)) -> Dict[str, str]:                                   
+async def upload_theme(file: UploadFile = File(...),themes=Depends(get_themes_repo)) -> Dict[str, str]:                                   
     """                                                                                                   
     Uploads a new CSS theme file.                                                                         
                                                                                                         
@@ -26,13 +26,13 @@ async def upload_theme(file: UploadFile = File(...),themes=Depends(get_themes_se
     """                                                                                                   
     
     try:
-        themes.save_theme(file.filename,file.file)
+        themes.save(file.filename,file.file)
         return Response(status_code=status.HTTP_200_OK) 
     except Exception as e:
         raise HTTPException(status_code= 500,detail = e)
     
 @router.get("/", response_model=List[str])
-async def list_themes(themes=Depends(get_themes_service))->List[str]:                                                         
+async def list_themes(themes=Depends(get_themes_repo))->List[str]:                                                         
 
     """                                                                                                   
     Lists all available CSS theme files.                                                                  
@@ -41,10 +41,10 @@ async def list_themes(themes=Depends(get_themes_service))->List[str]:
         List[str]: A list of theme filenames.                                                             
     """                                                                                                   
     
-    return themes.get_all_themes()
+    return themes.list_all()
 
 @router.get("/byname", response_model=str)                                                            
-async def list_themes(filename : str, themes= Depends(get_themes_service) ) -> str:                                                                     
+async def list_themes(filename : str, themes= Depends(get_themes_repo) ) -> str:                                                                     
     """                                                                                                   
     Lists all available CSS theme files.                                                                  
                                                                                                         
@@ -52,13 +52,13 @@ async def list_themes(filename : str, themes= Depends(get_themes_service) ) -> s
         List[str]: A list of theme filenames.                                                             
     """                                                                                                   
     try:
-        return themes.get_theme(filename)
+        return themes.get_content(filename)
 
-    except ThemeNotFoundException as e:
+    except ThemeNotFoundError as e:
         raise HTTPException(status_code=404, detail=f"Theme {filename} not found!")
 
 @router.delete("/", response_model=str)                                                            
-async def remove_theme(filename : str, themes= Depends(get_themes_service) ) -> str:                                                                     
+async def remove_theme(filename : str, themes= Depends(get_themes_repo) ) -> str:                                                                     
     """                                                                                                   
     Lists all available CSS theme files.                                                                  
                                                                                                         
@@ -66,9 +66,9 @@ async def remove_theme(filename : str, themes= Depends(get_themes_service) ) -> 
         List[str]: A list of theme filenames.                                                             
     """                                                                                                   
     try:
-        themes.remove_theme(filename)
+        themes.remove(filename)
         return Response(status_code=status.HTTP_200_OK)
 
-    except ThemeNotFoundException as e:
+    except ThemeNotFoundError as e:
         raise HTTPException(status_code=404, detail=f"Theme {filename} not found!")
     

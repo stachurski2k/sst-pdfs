@@ -1,26 +1,40 @@
 import os,shutil,sys
 from ..exceptions import *
 
-class TemplatesService():
-    def __init__(self,log,templatesdir):
-        self.log = log
-        self.templatesdir=templatesdir
-        os.makedirs(self.templatesdir, exist_ok=True)
+class ThemesRepo():
 
-    def save_template(self,filename:str,file):
+    def __init__(self,log,themespath):
+        self.log = log
+        self.themesdir=themespath
+        os.makedirs(self.themesdir, exist_ok=True)
+
+    def save(self,filename:str,file):
         """
         file is FileObject
         """
-        file_path = os.path.join(self.templatesdir,filename)
+        file_path = os.path.join(self.themesdir,filename)
         try:
             with open(file_path, "wb") as buffer:                                                             
                 shutil.copyfileobj(file, buffer)                                                         
 
         except Exception as e:
-            raise TemplateSaveError()
+            raise ThemeUploadError()
 
+    def get_full_path(self,themename:str)->str:
 
-    def get_all_templates(self) -> list[str]:
+        filepath = os.path.join(self.themesdir,themename)
+
+        if not os.path.exists(filepath):
+            filepath +=".css"
+            if not os.path.exists(filepath):
+                raise ThemeNotFoundError()
+        
+        return filepath
+
+    def get_dir(self):
+        return self.themesdir
+
+    def list_all(self) -> list[str]:
         """
         Retrieves a list of all theme filenames in the CUSTOM_THEMES_DIR.
 
@@ -28,14 +42,14 @@ class TemplatesService():
             List[str]: A list of theme filenames.
         """
         try:
-            templates = os.listdir(self.templatesdir)
-            return [f for f in templates if os.path.isfile(os.path.join(self.templatesdir, f))]
+            theme_files = os.listdir(self.themesdir)
+            return [f for f in theme_files if os.path.isfile(os.path.join(self.themesdir, f))]
         except FileNotFoundError:
             return []
         except Exception as e:
             return []
 
-    def get_template(self,template_name: str)->str:
+    def get_content(self,theme_name: str)->str:
         """
         Retrieves the content of a specific theme file.
         Args:
@@ -45,17 +59,15 @@ class TemplatesService():
         Raises:
             ThemeNotFoundException: If theme does not exist
         """
-        templattepath = os.path.join(self.templatesdir, template_name)
-        if not os.path.exists(templattepath):
-           templattepath= templattepath+".html.j2" 
+        theme_path = self.get_full_path(themename=theme_name)
 
         try:
-            with open(templattepath, "r") as f:
+            with open(theme_path, "r") as f:
                 return f.read()
         except FileNotFoundError:
-            raise TemplateNotFoundError()
+            raise ThemeNotFoundError()
 
-    def remove_template(self,template_name: str)->bool:
+    def remove(self,theme_name: str)->bool:
         """
         Removes a specific theme file.
 
@@ -65,14 +77,13 @@ class TemplatesService():
         Returns:
             bool: True if the theme was successfully removed, False otherwise.
         """
-        templatepath = os.path.join(self.templatesdir, template_name)
+        theme_path = self.get_full_path(themename=theme_name)
         try:
-            if not os.path.exists(templatepath):
-                self.log.debug("Template not found")
-                raise TemplateNotFoundError()
+            if not os.path.exists(theme_path):
+                raise ThemeNotFoundError()
 
-            os.remove(templatepath)
+            os.remove(theme_path)
             return True
 
         except FileNotFoundError:
-            raise TemplateNotFoundError()
+            raise ThemeNotFoundError()
