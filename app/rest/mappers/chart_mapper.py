@@ -5,8 +5,10 @@ from domain.value_objects.pdfs import *
 from rest.exceptions import *
 
 class ChartMapper():
-    def __init__(self,log):
+    def __init__(self,log,images_repo):
         self.log=log
+        self.imgs=images_repo
+        
     def map_to_model(self,request: ChartRequest):
         if isinstance(request,LineChartRequest):
             config = ChartConfig(
@@ -35,10 +37,3 @@ class ChartMapper():
         
         raise ChartMappingError()
     
-    def map_to_pdfdata(self,req: PDFRequest):
-
-        return PDFData(
-            template_name=req.template_name,
-            theme_name=req.theme_name,
-            params=req.params
-        )

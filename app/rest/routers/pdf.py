@@ -15,7 +15,7 @@ def generate_pdf_file(
     pdfreq: PDFRequest,
     tasks:BackgroundTasks,
     pdf_service = Depends(get_pdf_service),
-    mapper = Depends(get_rest_chart_mapper), 
+    mapper = Depends(get_rest_pdf_mapper), 
     temp = Depends(get_temp_service),
     ):
 
@@ -40,6 +40,9 @@ def generate_pdf_file(
 
     except ThemeNotFoundError as e:
         raise HTTPException(status_code=400,detail="Theme was not found!")
+    
+    except PDFGenerationError as e:
+        raise HTTPException(status_code=400,detail=f"{e}")
 
     except Exception as e:
         raise HTTPException(status_code=500,detail=f"{e}")

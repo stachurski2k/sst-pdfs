@@ -37,3 +37,7 @@ ChartRequest = Annotated[
     Union[LineChartRequest,HistogramRequest],
     Field(discriminator="chartType")
 ]
+
+class SaveChartRequest(BaseModel):
+    chart: ChartRequest
+    filename: str

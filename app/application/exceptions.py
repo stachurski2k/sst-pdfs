@@ -22,3 +22,6 @@ class ImageSaveError(Exception):
 
 class ImageNotFoundError(Exception):
     pass
+
+class PDFGenerationError(Exception):
+    pass

@@ -28,8 +28,7 @@ class PDFService():
             raise TemplateNotFoundError(f"Template '{data.template_name}' not found.")
 
         except jinja2.UndefinedError as e:
-            #raise InvalidDataError(f"The template requires data that was not provided: {e.message}")
-            pass
+            raise PDFGenerationError(f"The template requires data that was not provided: {e.message}")
 
         theme_path = self.themes_repo.get_full_path(data.theme_name)
 

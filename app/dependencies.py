@@ -10,6 +10,7 @@ from application.repos.images_repo import ImagesRepo
 from application.repos.templates_repo import TemplatesRepo
 from application.services.pdf_service import PDFService
 from rest.mappers.chart_mapper import *
+from rest.mappers.pdf_mapper import *
 
 @lru_cache()
 def get_logger()-> logging.Logger:
@@ -38,6 +39,10 @@ def get_chart_strategy_factory():
 @lru_cache
 def get_rest_chart_mapper():
     return ChartMapper(get_logger())
+
+@lru_cache
+def get_rest_pdf_mapper():
+    return PDFMapper(get_logger(),get_images_repo())
 
 @lru_cache
 def get_temp_service():

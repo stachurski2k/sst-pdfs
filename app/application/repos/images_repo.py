@@ -26,6 +26,9 @@ class ImagesRepo():
     def get_file_extension(self,file):
         return file.split(".")[1]
 
+    def prepare_path(self,imgname:str)->str:
+        return os.path.join(self.imagesdir,imgname)
+
     
     def get_full_path(self,imgname:str)->str:
 

@@ -5,4 +5,5 @@ from pydantic import BaseModel
 class PDFRequest(BaseModel):
     template_name:str
     theme_name:str
-    params: Dict[str,Any]
+    params: Dict[str,Any] = {}
+    images: Dict[str,str] = {} # key: image_name
