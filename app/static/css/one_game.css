@@ -1,0 +1,51 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+@page {
+  size: A4 landscape;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: auto;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #444;
+    text-align: center;
+    padding: 2px;
+}
+th.group-header {
+    background-color: #f0f0f0;
+    padding: 4px;
+}
+.exercise-group th {
+    font-weight: normal;
+    padding: 2px;
+}
+
+.players-table{
+    max-width: 90%;
+}
+  .name-col {
+    width: auto;
+    padding: 1px;
+  }
+  .stat-col {
+    width: auto;
+    padding: 2px
+  }
+
+#main-container {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #444;
+    font-size: 9px;
+}

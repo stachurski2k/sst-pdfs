@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Player Performance</title>
+</head>
+<body>
+
+<div id="main-container">
+  <h1>Player Performance Report</h1>
+  <table class="players-table">
+    <thead>
+      <tr>
+        <th class="name-col" rowspan="2">Player Name</th>
+        {% for e in exercises %}
+            <th class="group-header" colspan="3">{{ e }}</th>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for e in exercises %}
+            <th class="stat-col">R</th>
+            <th class="stat-col">P</th>
+            <th class="stat-col">G</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+        {% for x in player_data %}
+            <tr>
+                <td class="name-col">{{ x.name }}</td>
+                {% for score in x.scores %}
+                    <td class="stat-col">{{ score }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+      <tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>
